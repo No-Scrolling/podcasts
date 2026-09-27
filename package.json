@@ -1,0 +1,29 @@
+{
+  "name": "podcasts",
+  "private": true,
+  "scripts": {
+    "dev": "ink dev",
+    "build": "ink build",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ink/audio": "file:../ink/packages/audio",
+    "@ink/network": "file:../ink/packages/network",
+    "@ink/store": "file:../ink/packages/store",
+    "entities": "^7.0.0",
+    "ink": "file:../ink/packages/ink",
+    "react": "19.2.8",
+    "valibot": "1.5.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/react": "19.2.18"
+  },
+  "overrides": {
+    "ink": "file:../ink/packages/ink",
+    "@ink/files": "file:../ink/packages/files",
+    "@ink/audio": "file:../ink/packages/audio",
+    "@ink/network": "file:../ink/packages/network",
+    "@ink/store": "file:../ink/packages/store"
+  }
+}
