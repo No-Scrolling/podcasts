@@ -2,7 +2,7 @@ name = "Podcasts"
 package = "com.vandam.podcasts"
 version = "0.1.0"
 version_code = 1
-capabilities = ["network"]
+capabilities = ["network-cleartext"]
 
 [lightos]
 enabled = true

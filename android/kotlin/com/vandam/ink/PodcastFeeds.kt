@@ -133,24 +133,33 @@ internal class PodcastFeeds(context: Context) : NativeAdapter {
     }
 
     private fun fetch(requestId: Long, address: String, detailId: String? = null): List<JSONObject> {
-        val url = URL(address)
-        require(url.protocol == "https" || url.protocol == "http") { "Invalid feed URL" }
-        val connection = url.openConnection() as HttpURLConnection
-        connections[requestId] = connection
-        try {
-            connection.connectTimeout = 15_000
-            connection.readTimeout = 30_000
-            check(connection.responseCode in 200..299) { "Could not load podcast (${connection.responseCode})" }
-            return connection.inputStream.buffered().use { input ->
-                val parser = Xml.newPullParser()
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-                parser.setInput(input, null)
-                readEpisodes(parser, detailId)
+        var url = URL(address)
+        repeat(10) {
+            require(url.protocol == "https" || url.protocol == "http") { "Invalid feed URL" }
+            val connection = url.openConnection() as HttpURLConnection
+            connections[requestId] = connection
+            try {
+                connection.connectTimeout = 15_000
+                connection.readTimeout = 30_000
+                connection.instanceFollowRedirects = false
+                val status = connection.responseCode
+                if (status in listOf(301, 302, 303, 307, 308)) {
+                    url = URL(url, requireNotNull(connection.getHeaderField("Location")) { "Missing feed redirect" })
+                    return@repeat
+                }
+                check(status in 200..299) { "Could not load podcast ($status)" }
+                return connection.inputStream.buffered().use { input ->
+                    val parser = Xml.newPullParser()
+                    parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
+                    parser.setInput(input, null)
+                    readEpisodes(parser, detailId)
+                }
+            } finally {
+                connections.remove(requestId)
+                connection.disconnect()
             }
-        } finally {
-            connections.remove(requestId)
-            connection.disconnect()
         }
+        error("Too many feed redirects")
     }
 
     private fun readEpisodes(parser: XmlPullParser, detailId: String?): List<JSONObject> {

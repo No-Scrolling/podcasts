@@ -14,10 +14,13 @@ export default function Downloaded() {
     if (!item.src) return;
     if (!player.state.ready) throw new Error("Audio player is not ready. Try again.");
     await currentEpisode.set({ id: item.id, date: item.date ?? "", source: { type: "downloads", ids: items.map(entry => entry.id) } });
-    if (player.state.current?.id !== item.id) {
+    const sameEpisode = player.state.current?.id === item.id;
+    if (!sameEpisode || player.state.current?.src !== item.src) {
       const progress = (await episodeProgress.get())[item.id];
+      let position = progress && !progress.finished ? progress.position : 0;
+      if (sameEpisode && !player.state.ended) position = player.state.position;
       await player.setQueue([{ id: item.id, src: item.src, title: item.title, artist: item.artist, artwork: item.artwork, duration: item.duration ?? progress?.duration }],
-        { startPosition: progress && !progress.finished ? progress.position : 0 });
+        { startPosition: position });
       if (progress?.finished) await restartProgress(item.id);
       await player.play();
     }
