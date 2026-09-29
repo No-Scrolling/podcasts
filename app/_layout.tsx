@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { Slot } from "ink";
 import { callNative, onNativeMessage } from "ink/native";
-import { usePlayer, type PlayerState } from "@ink/audio";
+import { usePlayer, type PlayerState, type SourceReplacement } from "@ink/audio";
 import { useAutoplay } from "../lib/autoplay";
 import { useAppearance } from "../lib/appearance";
 import { PodcastPlayerContext } from "../lib/player";
@@ -17,40 +17,36 @@ export default function Layout() {
   const current = useRef(player.state);
   useLayoutEffect(() => { current.current = player.state; }, [player.state]);
   const previous = useRef<PlayerState | null>(null);
-  const savedAt = useRef(0);
   useEffect(() => {
     const state = player.state;
     const last = previous.current;
     if (!state.current || !state.ready || state.buffering || state.error) return;
     previous.current = state;
     const changedEpisode = state.current.id !== last?.current?.id;
-    if (changedEpisode) {
-      savedAt.current = Date.now();
-      return;
-    }
+    if (changedEpisode) return;
     const paused = last?.playWhenReady && !state.playWhenReady;
     const ended = state.ended && !last?.ended;
-    const checkpoint = state.playing && Date.now() - savedAt.current >= 30_000;
-    if (!paused && !ended && !checkpoint) return;
-    savedAt.current = Date.now();
+    if (!paused && !ended) return;
     void saveProgress(state).catch(error => console.error("Could not save episode progress", error));
   }, [player.state]);
   useEffect(() => {
-    const save = () => {
-      savedAt.current = Date.now();
-      void saveProgress(current.current).catch(error => console.error("Could not save episode progress", error));
-    };
-    const unsubscribe = onNativeMessage("pause", save);
-    return () => { unsubscribe(); save(); };
-  }, []);
-  async function switchToDownloadedSource(position: number) {
-    const state = current.current;
+    if (!player.state.ready) return;
+    const save = async () => saveProgress(await player.getState());
+    const checkpoint = setInterval(() => {
+      if (current.current.playing) void save().catch(error => console.error("Could not save episode progress", error));
+    }, 30_000);
+    const unsubscribe = onNativeMessage("pause", () => {
+      void save().catch(error => console.error("Could not save episode progress", error));
+    });
+    return () => { clearInterval(checkpoint); unsubscribe(); };
+  }, [player.state.ready, player.getState]);
+  async function switchToDownloadedSource(state: PlayerState, options: SourceReplacement = {}) {
     const saved = downloads.getSnapshot();
     const item = state.current;
     if (!item || saved.status !== "ready") return false;
     const local = saved.data.find(download => download.id === item.id && download.status === "finished");
     if (!local?.src || local.src === item.src) return false;
-    await player.setQueue([{ ...item, src: local.src, duration: state.duration }], { startPosition: position });
+    await player.replaceSource(item.id, local.src, options);
     return true;
   }
   const controls = {
@@ -67,24 +63,29 @@ export default function Layout() {
     },
     async toggle() {
       autoplay.cancel();
-      const state = current.current;
+      const state = await player.getState();
       if (!state.playWhenReady) {
         await callNative("podcast-sleep-timer", "resume", {});
-        await switchToDownloadedSource(state.ended ? 0 : state.position);
+        await switchToDownloadedSource(state, state.ended ? { position: 0 } : {});
       }
       await player.toggle();
     },
     async setQueue(...args: Parameters<typeof player.setQueue>) {
       autoplay.cancel();
-      await saveProgress(current.current);
+      if (current.current.ready) await saveProgress(await player.getState());
       await player.setQueue(...args);
+    },
+    async seekBy(offset: number) {
+      if (!Number.isSafeInteger(offset)) throw new RangeError("Seek offset must be a safe integer in milliseconds");
+      autoplay.cancel();
+      const state = await player.getState();
+      if (!await switchToDownloadedSource(state, { offset })) await player.seekBy(offset);
+      await saveProgress(await player.getState());
     },
     async seek(position: number) {
       autoplay.cancel();
-      const state = current.current;
-      if (!await switchToDownloadedSource(position)) await player.seek(position);
-      await saveProgress({ ...state, position: Math.max(0, Math.min(position, state.duration)), ended: false, buffering: false });
-      savedAt.current = Date.now();
+      if (!await switchToDownloadedSource(await player.getState(), { position })) await player.seek(position);
+      await saveProgress(await player.getState());
     },
   };
   return <PodcastPlayerContext.Provider value={controls}><Slot /></PodcastPlayerContext.Provider>;

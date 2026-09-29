@@ -23,11 +23,16 @@ export function useDownloadCleanup(player: ReturnType<typeof usePlayer>) {
       const current = player.state.current;
       // Keep the file open while someone continues listening after marking it finished.
       if (current?.id === item.id && player.state.playWhenReady && !player.state.ended) continue;
-      pending.current.add(item.src);
+      const src = item.src;
+      pending.current.add(src);
       void (async () => {
-        if (current?.id === item.id && current.src === item.src) {
-          await player.setQueue([{ ...current, src: item.url, duration: player.state.duration }],
-            { startPosition: player.state.ended ? player.state.duration : player.state.position, prepare: false });
+        const state = await player.getState();
+        if (state.current?.id === item.id && state.playWhenReady && !state.ended) {
+          pending.current.delete(src);
+          return;
+        }
+        if (state.current?.id === item.id && state.current.src === item.src) {
+          await player.replaceSource(item.id, item.url, { prepare: false });
         }
         await removeDownload(item.id);
       })().catch(error => console.error("Could not remove finished download", error));

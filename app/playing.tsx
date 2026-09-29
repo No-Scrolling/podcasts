@@ -21,13 +21,10 @@ export default function Playing() {
     await downloadEpisode(item.id, existing?.url ?? item.src, item.title, { artist: item.artist, artwork: item.artwork, duration: state.duration, date: episode.id === item.id ? episode.date : existing?.date });
   });
   const saved = useSnapshot(playbackSettings);
-  const action = useAction(async (command: "toggle" | "seek", position: number = 0) => {
-    if (command === "toggle") await player.toggle();
-    else await player.seek(position);
-  });
+  const recover = useAction(player.toggle);
   if (transfer.status === "error") return <Screen title="Download"><ErrorState message={transfer.error.message} onRetry={transfer.run} /></Screen>;
-  const error = state.error ?? (action.status === "error" ? action.error : null);
-  if (error) return <Screen title="Playing"><ErrorState message={error.message} onRetry={() => action.run("toggle")} /></Screen>;
+  const error = state.error ?? (recover.status === "error" ? recover.error : null);
+  if (error) return <Screen title="Playing"><ErrorState message={error.message} onRetry={recover.run} /></Screen>;
   if (saved.status === "error") return <Screen title="Playing"><ErrorState message={saved.error.message} onRetry={() => { void playbackSettings.get(); }} /></Screen>;
   if (!state.ready || saved.status === "loading") return <Screen title="Playing"><LoadingState /></Screen>;
   if (!state.current) return <Screen title="Playing"><EmptyState title="Nothing playing" /></Screen>;
@@ -43,8 +40,7 @@ export default function Playing() {
     onTitlePress={() => navigate({ path: "/episode-details", params: { showId, episodeId: item.id.slice(showId.length + 1), fromPlayer: true } })}
     artists={[{ name: item.artist ?? "", onPress: showId ? () => navigate({ path: "/show/[id]", params: { id: showId } }) : undefined }]}
     actions={[downloadAction, { icon: schedule, selected: timer.status === "ready" && timer.data.mode !== "off", onPress: () => navigate("/sleep-timer") }, { icon: graphicEq, selected: state.skipSilence || state.voiceBoost, onPress: () => navigate("/effects") }, { label: `${state.speed}x`, onPress: () => navigate("/speed") }]}
-    playing={state.playWhenReady} buffering={state.buffering} loading={state.loading && /^https?:\/\//i.test(item.src)} position={state.position} duration={state.duration}
-    onPlayPause={() => action.run("toggle")} onSeek={position => action.run("seek", position)}
-    previous={{ seconds: saved.data.back, onPress: () => action.run("seek", Math.max(0, state.position - saved.data.back * 1000)) }}
-    next={{ seconds: saved.data.forward, onPress: () => action.run("seek", Math.min(state.duration, state.position + saved.data.forward * 1000)) }} />;
+    playback={player}
+    previous={{ seconds: saved.data.back }}
+    next={{ seconds: saved.data.forward }} />;
 }

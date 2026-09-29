@@ -12,11 +12,10 @@ export default function DeleteDownload() {
   const remove = useAction(async () => {
     if (saved.status !== "ready" || !player.state.ready) return;
     const download = saved.data.find(item => item.id === id);
-    const current = player.state.current;
+    const state = await player.getState();
+    const current = state.current;
     if (download && current?.id === id && current.src === download.src) {
-      const { position, playing, duration } = player.state;
-      await player.setQueue([{ ...current, src: download.url, duration }], { startPosition: position });
-      if (playing) await player.play();
+      await player.replaceSource(id, download.url);
     }
     await removeDownload(id);
     back();
