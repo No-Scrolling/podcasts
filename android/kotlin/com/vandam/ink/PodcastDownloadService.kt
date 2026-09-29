@@ -50,6 +50,38 @@ internal object PodcastTransfers {
     private var onIdle: (() -> Unit)? = null
     private fun saved(context: Context) = context.getSharedPreferences("podcast-downloads", Context.MODE_PRIVATE)
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val observers = mutableSetOf<() -> Unit>()
+    private var notificationPending = false
+    private var revision = 0L
+    private val publish = Runnable {
+        val listeners = synchronized(this) {
+            notificationPending = false
+            observers.toList()
+        }
+        listeners.forEach { it() }
+    }
+
+    @Synchronized fun observe(listener: () -> Unit) { observers.add(listener) }
+    @Synchronized fun unobserve(listener: () -> Unit) {
+        observers.remove(listener)
+        if (observers.isEmpty()) {
+            handler.removeCallbacks(publish)
+            notificationPending = false
+        }
+    }
+    @Synchronized private fun changed(immediate: Boolean = false) {
+        if (observers.isEmpty()) return
+        if (notificationPending) {
+            if (!immediate) return
+            handler.removeCallbacks(publish)
+        }
+        notificationPending = true
+        handler.postDelayed(publish, if (immediate) 0L else 250L)
+    }
+    @Synchronized fun snapshot(context: Context): JSONObject = JSONObject()
+        .put("revision", ++revision).put("items", state(context))
+
     @Synchronized fun active() = jobs.isNotEmpty()
 
     @Synchronized fun start(context: Context, data: JSONObject) {
@@ -71,6 +103,7 @@ internal object PodcastTransfers {
             store.edit().remove(id).commit()
             throw error
         }
+        changed(immediate = true)
     }
 
     @Synchronized fun remove(context: Context, id: String) {
@@ -82,6 +115,7 @@ internal object PodcastTransfers {
         }
         entry.optJSONObject("file")?.let { InkManagedFiles(context).remove(it.getString("id")) }
         check(store.edit().remove(id).commit()) { "Could not remove download" }
+        changed(immediate = true)
     }
 
     @Synchronized fun metadata(context: Context, items: JSONArray): Boolean {
@@ -101,7 +135,10 @@ internal object PodcastTransfers {
                 changed = true
             }
         }
-        if (changed) check(editor.commit()) { "Could not save episode details" }
+        if (changed) {
+            check(editor.commit()) { "Could not save episode details" }
+            changed(immediate = true)
+        }
         return changed
     }
 
@@ -181,6 +218,7 @@ internal object PodcastTransfers {
             job.connection?.disconnect()
             partial.delete()
             File(partial.path + ".validator").delete()
+            changed(immediate = true)
         }
     }
 
@@ -225,6 +263,7 @@ internal object PodcastTransfers {
                 }
                 var received = if (append) offset else 0L
                 job.progress = if (total > 0) (received * 100 / total).toInt().coerceIn(0, 99) else null
+                changed()
                 connection.inputStream.use { input ->
                     FileOutputStream(partial, append).buffered().use { sink ->
                         val buffer = ByteArray(32768)
@@ -235,6 +274,7 @@ internal object PodcastTransfers {
                             sink.write(buffer, 0, count)
                             received += count
                             if (total > 0) job.progress = (received * 100 / total).toInt().coerceIn(0, 99)
+                            changed()
                         }
                     }
                 }

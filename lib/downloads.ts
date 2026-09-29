@@ -1,5 +1,6 @@
 import * as v from "valibot";
-import { resource } from "ink";
+import type { Snapshot } from "ink";
+import { attachNativeController } from "ink/native/controller";
 import { callNative } from "ink/native";
 
 const optionalText = v.fallback(v.optional(v.string()), undefined);
@@ -18,44 +19,53 @@ const downloadSchema = v.pipe(v.object({
 }), v.transform(({ file, ...download }) => ({ ...download, src: file?.src })));
 export type Download = v.InferOutput<typeof downloadSchema>;
 
-const downloadState = resource({
-  key: () => ["downloads"],
-  async load(): Promise<Download[]> {
-    return v.parse(v.array(downloadSchema), JSON.parse(
-      await callNative("podcast-downloads", "state", {}, { timeoutMs: 120_000 }),
-    ));
-  },
-})();
+const stateSchema = v.object({ revision: v.number(), items: v.array(downloadSchema) });
+let snapshot: Snapshot<Download[]> = { status: "loading" };
+let revision = -1;
+let attachment: ReturnType<typeof attachNativeController> | undefined;
+const listeners = new Set<() => void>();
 
-let subscribers = 0;
-let poll: ReturnType<typeof setTimeout> | undefined;
+function publish(value: unknown) {
+  const state = v.parse(stateSchema, value);
+  if (state.revision < revision) return;
+  revision = state.revision;
+  snapshot = { status: "ready", data: state.items };
+  for (const listener of listeners) listener();
+}
+function failed(cause: unknown) {
+  snapshot = { status: "error", error: cause instanceof Error ? cause : new Error(String(cause)) };
+  for (const listener of listeners) listener();
+}
 
-function scheduleProgress() {
-  clearTimeout(poll);
-  poll = undefined;
-  const state = downloadState.getSnapshot();
-  if (subscribers && state.status === "ready" && !state.refreshing && !state.refreshError
-    && state.data.some(item => item.status === "downloading")) {
-    poll = setTimeout(() => { void downloadState.refresh(); }, 50);
-  }
+function observe() {
+  if (attachment) return;
+  const current = attachNativeController("podcast-downloads", {}, value => {
+    if (attachment !== current) return;
+    try { publish(value); } catch (error) { failed(error); }
+  });
+  attachment = current;
+  void current.ready.catch(error => {
+    if (attachment === current) { attachment = undefined; failed(error); }
+  });
 }
 
 export const downloads = {
-  getSnapshot: downloadState.getSnapshot,
-  refresh: downloadState.refresh,
+  getSnapshot: () => snapshot,
+  async refresh(): Promise<void> {
+    if (listeners.size) observe();
+    const previousRevision = revision;
+    try { publish(JSON.parse(await callNative("podcast-downloads", "state", {}, { timeoutMs: 120_000 }))); }
+    catch (error) { if (revision === previousRevision) failed(error); }
+  },
   subscribe(listener: () => void) {
-    subscribers++;
-    const unsubscribe = downloadState.subscribe(() => {
-      scheduleProgress();
-      listener();
-    });
-    scheduleProgress();
+    listeners.add(listener);
+    observe();
     return () => {
-      unsubscribe();
-      subscribers--;
-      if (!subscribers) {
-        clearTimeout(poll);
-        poll = undefined;
+      listeners.delete(listener);
+      if (!listeners.size) {
+        const current = attachment;
+        attachment = undefined;
+        void current?.dispose().catch(error => console.error("Could not stop observing downloads", error));
       }
     };
   },
