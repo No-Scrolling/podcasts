@@ -41,6 +41,6 @@ export default function Playing() {
     artists={[{ name: item.artist ?? "", onPress: showId ? () => navigate({ path: "/show/[id]", params: { id: showId } }) : undefined }]}
     actions={[downloadAction, { icon: schedule, selected: timer.status === "ready" && timer.data.mode !== "off", onPress: () => navigate("/sleep-timer") }, { icon: graphicEq, selected: state.skipSilence || state.voiceBoost, onPress: () => navigate("/effects") }, { label: `${state.speed}x`, onPress: () => navigate("/speed") }]}
     playback={player}
-    previous={{ seconds: saved.data.back }}
-    next={{ seconds: saved.data.forward }} />;
+    previous={{ kind: "skip", seconds: saved.data.back }}
+    next={{ kind: "skip", seconds: saved.data.forward }} />;
 }

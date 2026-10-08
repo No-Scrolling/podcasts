@@ -16,7 +16,7 @@ export function EpisodeDescription({ parts, duration, onTimestamp }: {
   }
 
   return <Text size={18}>{parts.length ? parts.flatMap(part => {
-    if (part.href) return [<Text key={contentKey("link", part.href, part.text)} href={part.href}>{part.text}</Text>];
+    if (part.href) return [<Text key={contentKey("link", part.href, part.text)} url={part.href}>{part.text}</Text>];
     const content = [];
     let offset = 0;
     for (const match of part.text.matchAll(/(?<![\w:])(?:(\d{1,3}):)?(\d{1,3}):([0-5]\d)(?![\w:])/g)) {
