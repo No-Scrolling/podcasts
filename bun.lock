@@ -5,11 +5,13 @@
     "": {
       "name": "podcasts",
       "dependencies": {
-        "@ink/audio": "file:../ink/packages/audio",
-        "@ink/network": "file:../ink/packages/network",
-        "@ink/store": "file:../ink/packages/store",
+        "@ink/audio": "npm:ink-framework-audio@0.1.0-alpha.5",
+        "@ink/files": "npm:ink-framework-files@0.1.0-alpha.5",
+        "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.5",
+        "@ink/network": "npm:ink-framework-network@0.1.0-alpha.5",
+        "@ink/store": "npm:ink-framework-store@0.1.0-alpha.5",
         "entities": "^7.0.0",
-        "ink": "file:../ink/packages/ink",
+        "ink": "npm:ink-framework@0.1.0-alpha.5",
         "react": "19.2.8",
         "valibot": "1.5.0",
       },
@@ -19,19 +21,16 @@
       },
     },
   },
-  "overrides": {
-    "@ink/audio": "file:../ink/packages/audio",
-    "@ink/files": "file:../ink/packages/files",
-    "@ink/network": "file:../ink/packages/network",
-    "@ink/store": "file:../ink/packages/store",
-    "ink": "file:../ink/packages/ink",
-  },
   "packages": {
-    "@ink/audio": ["@ink/audio@file:../ink/packages/audio", { "peerDependencies": { "@ink/files": "0.1.0", "ink": "0.0.0", "react": "19.2.8" } }],
+    "@ink/audio": ["ink-framework-audio@0.1.0-alpha.5", "", { "peerDependencies": { "@ink/files": "npm:ink-framework-files@0.1.0-alpha.5", "ink": "npm:ink-framework@0.1.0-alpha.5", "react": "19.2.8" } }, "sha512-wAWtL3SiW7jMsVvGsq+9f5DbJ7ghizWE2QhtxJTfA76+r9jvH5ZozopEQcHqu34YbZh6CVfr0C2nOZmIw2Ftkw=="],
 
-    "@ink/network": ["@ink/network@file:../ink/packages/network", { "dependencies": { "@types/whatwg-url": "13.0.0", "base64-js": "1.5.1", "web-streams-polyfill": "4.3.0", "whatwg-url": "14.2.0" }, "peerDependencies": { "@ink/files": "0.1.0", "ink": "0.0.0" } }],
+    "@ink/files": ["ink-framework-files@0.1.0-alpha.5", "", { "dependencies": { "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.5" }, "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.5", "react": "19.2.8" } }, "sha512-kvhysYHysq9MwchTmHUMkbpO7/9EhsWS7Hyl3/ARD7PMet+NjZQN0Ku/I0nb8OUkTOow5EuZU/eIy5xt5NuHlQ=="],
 
-    "@ink/store": ["@ink/store@file:../ink/packages/store", { "peerDependencies": { "ink": "0.0.0" } }],
+    "@ink/lightos": ["ink-framework-lightos@0.1.0-alpha.5", "", { "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.5", "react": "19.2.8" } }, "sha512-APHv2A3KQgoiVHJnIuUVnwBdsnpEfqmiyqmol5rXQuqi+q+cYHpoqDg0/VPPirRXgvMambqUPKw6i8yuw1rk+Q=="],
+
+    "@ink/network": ["ink-framework-network@0.1.0-alpha.5", "", { "dependencies": { "@types/whatwg-url": "13.0.0", "web-streams-polyfill": "4.3.0", "whatwg-url": "14.2.0" }, "peerDependencies": { "@ink/files": "npm:ink-framework-files@0.1.0-alpha.5", "ink": "npm:ink-framework@0.1.0-alpha.5" } }, "sha512-Bqfuabcut6L8jWzRoibLJorw7BQ69JPBRo0TPa60C39KtKLeGSkEiYQm1sSwzVRrGN9qEfFdg+Bby1DODhQRJA=="],
+
+    "@ink/store": ["ink-framework-store@0.1.0-alpha.5", "", { "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.5" } }, "sha512-jG5n+1Wt2nuRc/+K8OTDuNnilRscnXFqOObBT+5C4cMrcO/6hHPJlsZul6XnrG8nazGpgaVJnqpYe7zzSrZXzQ=="],
 
     "@types/react": ["@types/react@19.2.18", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w=="],
 
@@ -39,13 +38,11 @@
 
     "@types/whatwg-url": ["@types/whatwg-url@13.0.0", "", { "dependencies": { "@types/webidl-conversions": "*" } }, "sha512-N8WXpbE6Wgri7KUSvrmQcqrMllKZ9uxkYWMt+mCSGwNc0Hsw9VQTW7ApqI4XNrx6/SaM2QQJCzMPDEXE058s+Q=="],
 
-    "base64-js": ["base64-js@1.5.1", "", {}, "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="],
-
     "csstype": ["csstype@3.2.3", "", {}, "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="],
 
     "entities": ["entities@7.0.1", "", {}, "sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA=="],
 
-    "ink": ["ink@file:../ink/packages/ink", { "dependencies": { "linkify-it": "^6.1.0", "react-reconciler": "0.33.0" }, "peerDependencies": { "react": "19.2.8" } }],
+    "ink": ["ink-framework@0.1.0-alpha.5", "", { "dependencies": { "linkify-it": "^6.1.0", "react-reconciler": "0.33.0" }, "peerDependencies": { "react": "19.2.8" } }, "sha512-bvxOiFZJqTlk+p/1nd/m65AD+wT2oSLlX5zFK3eRUZa9kp13UzYOgOB6A5eViIEjY/Y1xFEZK9AqV09qBXQrwA=="],
 
     "linkify-it": ["linkify-it@6.1.0", "", { "dependencies": { "uc.micro": "^3.0.0" } }, "sha512-wJ/TwpSDTLepCrQoYWYIExIKg5Zchex2Nn5yk2mFnB+6PtdkHtyLx742md9csRjjOnGkKIS/RrbY7l8D6gT9Vw=="],
 
@@ -70,9 +67,5 @@
     "webidl-conversions": ["webidl-conversions@7.0.0", "", {}, "sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g=="],
 
     "whatwg-url": ["whatwg-url@14.2.0", "", { "dependencies": { "tr46": "^5.1.0", "webidl-conversions": "^7.0.0" } }, "sha512-De72GdQZzNTUBBChsXueQUnPKDkg/5A5zp7pFDuQAj5UFoENpiACU0wlCvzpAGnTkj++ihpKwKyYewn/XNUbKw=="],
-
-    "@ink/audio/@ink/files": ["@ink/files@file:../ink/packages/files", {}],
-
-    "@ink/network/@ink/files": ["@ink/files@file:../ink/packages/files", {}],
   }
 }
