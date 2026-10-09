@@ -1,25 +1,21 @@
-# Podcasts
+<img src="assets/header.png" alt="Podcasts">
 
-A podcast player for Light Phone III, built with Ink.
+<p>A podcast player for Light Phone III, built with Ink.</p>
 
-- Search shows through Apple Podcasts.
-- Star shows to keep them on the home screen.
-- Reopen cached shows offline, with stale episode lists refreshed in the background.
-- Stream episodes with background playback, seeking and skip controls.
-- Download episodes for local playback. Long-press an episode to download, cancel or remove it.
-- Browse saved episodes in Downloaded. Delete downloads manually or automatically when finished.
-- Choose playback speed and skip durations.
-- Shorten pauses with Smart Speed and even out speech volume with Voice Boost.
-- Read episode descriptions and tap timestamps to jump to that point.
-- Optionally play the next unfinished episode in the show or Downloaded list you started from.
-- Set a sleep timer from the playing screen, for a duration or the end of the episode.
-- Restore the current episode and playback position after reopening.
+<p>
+  <a href="https://github.com/No-Scrolling/podcasts?tab=readme-ov-file#license"><picture><source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/github/license/No-Scrolling/podcasts?label=licence&amp;color=e5e5e5&amp;labelColor=5c5c5c"><source media="(prefers-color-scheme: light)" srcset="https://img.shields.io/github/license/No-Scrolling/podcasts?label=licence&amp;color=black"><img src="https://img.shields.io/github/license/No-Scrolling/podcasts?label=licence&amp;color=black" alt="Licence"></picture></a>
+  <a href="https://github.com/No-Scrolling/podcasts/releases"><picture><source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/github/v/release/No-Scrolling/podcasts?include_prereleases&amp;sort=date&amp;label=release&amp;color=e5e5e5&amp;labelColor=5c5c5c"><source media="(prefers-color-scheme: light)" srcset="https://img.shields.io/github/v/release/No-Scrolling/podcasts?include_prereleases&amp;sort=date&amp;label=release&amp;color=black"><img src="https://img.shields.io/github/v/release/No-Scrolling/podcasts?include_prereleases&amp;sort=date&amp;label=release&amp;color=black" alt="Latest release"></picture></a>
+</p>
 
-Show and episode data comes from public RSS feeds. Episode lists load 24 at a time as you scroll. The show cache keeps up to 32 shows or 32 MB and refreshes after five minutes.
+## Installation
 
-Uses the neighbouring Ink checkout during development:
+The latest APK is available in [Releases](https://github.com/No-Scrolling/podcasts/releases/latest).
 
-```sh
-bun install
-ink dev
-```
+## Features
+
+- Search shows through Apple Podcasts and star your favourites.
+- Adjust playback speed.
+- Shorten pauses with Smart Speed and balance speech volume with Voice Boost.
+- Read episode descriptions and tap timestamps to jump ahead.
+- Set a sleep timer for a duration or the end of an episode.
+- Delete downloads manually or automatically after listening.
