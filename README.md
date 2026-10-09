@@ -1,4 +1,4 @@
-<img src="assets/header.png" alt="Podcasts">
+<img src="assets/header.png" alt="podcasts">
 
 <p>A podcast player for Light Phone III, built with Ink.</p>
 
