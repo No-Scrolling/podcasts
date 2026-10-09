@@ -7,15 +7,15 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
-    "@ink/audio": "npm:ink-framework-audio@0.1.0-alpha.5",
-    "@ink/network": "npm:ink-framework-network@0.1.0-alpha.5",
-    "@ink/store": "npm:ink-framework-store@0.1.0-alpha.5",
+    "@ink/audio": "npm:ink-framework-audio@0.1.0-alpha.8",
+    "@ink/network": "npm:ink-framework-network@0.1.0-alpha.8",
+    "@ink/store": "npm:ink-framework-store@0.1.0-alpha.8",
     "entities": "^7.0.0",
-    "ink": "npm:ink-framework@0.1.0-alpha.5",
+    "ink": "npm:ink-framework@0.1.0-alpha.8",
     "react": "19.2.8",
     "valibot": "1.5.0",
-    "@ink/files": "npm:ink-framework-files@0.1.0-alpha.5",
-    "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.5"
+    "@ink/files": "npm:ink-framework-files@0.1.0-alpha.8",
+    "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.8"
   },
   "devDependencies": {
     "typescript": "5.9.3",

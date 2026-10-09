@@ -5,13 +5,13 @@
     "": {
       "name": "podcasts",
       "dependencies": {
-        "@ink/audio": "npm:ink-framework-audio@0.1.0-alpha.5",
-        "@ink/files": "npm:ink-framework-files@0.1.0-alpha.5",
-        "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.5",
-        "@ink/network": "npm:ink-framework-network@0.1.0-alpha.5",
-        "@ink/store": "npm:ink-framework-store@0.1.0-alpha.5",
+        "@ink/audio": "npm:ink-framework-audio@0.1.0-alpha.8",
+        "@ink/files": "npm:ink-framework-files@0.1.0-alpha.8",
+        "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.8",
+        "@ink/network": "npm:ink-framework-network@0.1.0-alpha.8",
+        "@ink/store": "npm:ink-framework-store@0.1.0-alpha.8",
         "entities": "^7.0.0",
-        "ink": "npm:ink-framework@0.1.0-alpha.5",
+        "ink": "npm:ink-framework@0.1.0-alpha.8",
         "react": "19.2.8",
         "valibot": "1.5.0",
       },
@@ -22,15 +22,15 @@
     },
   },
   "packages": {
-    "@ink/audio": ["ink-framework-audio@0.1.0-alpha.5", "", { "peerDependencies": { "@ink/files": "npm:ink-framework-files@0.1.0-alpha.5", "ink": "npm:ink-framework@0.1.0-alpha.5", "react": "19.2.8" } }, "sha512-wAWtL3SiW7jMsVvGsq+9f5DbJ7ghizWE2QhtxJTfA76+r9jvH5ZozopEQcHqu34YbZh6CVfr0C2nOZmIw2Ftkw=="],
+    "@ink/audio": ["ink-framework-audio@0.1.0-alpha.8", "", { "peerDependencies": { "@ink/files": "npm:ink-framework-files@0.1.0-alpha.8", "ink": "npm:ink-framework@0.1.0-alpha.8", "react": "19.2.8" } }, "sha512-rt7CftMuYx0+YUgzZExQbedZuSUbwJUe5idRky0O7FUtWGhSzrGTmKanVFFzIw0unEEsIq5JwFMRConZdOxvkw=="],
 
-    "@ink/files": ["ink-framework-files@0.1.0-alpha.5", "", { "dependencies": { "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.5" }, "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.5", "react": "19.2.8" } }, "sha512-kvhysYHysq9MwchTmHUMkbpO7/9EhsWS7Hyl3/ARD7PMet+NjZQN0Ku/I0nb8OUkTOow5EuZU/eIy5xt5NuHlQ=="],
+    "@ink/files": ["ink-framework-files@0.1.0-alpha.8", "", { "dependencies": { "@ink/lightos": "npm:ink-framework-lightos@0.1.0-alpha.8" }, "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.8", "react": "19.2.8" } }, "sha512-RpJVSSOdiIIkFIVdrlI7FkSYtQaM25HDLMpd8Ei0es4T1ZOORyqOfx/DJd/HtaoB2G9kR/7AlkHp2V5Bv7ACzA=="],
 
-    "@ink/lightos": ["ink-framework-lightos@0.1.0-alpha.5", "", { "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.5", "react": "19.2.8" } }, "sha512-APHv2A3KQgoiVHJnIuUVnwBdsnpEfqmiyqmol5rXQuqi+q+cYHpoqDg0/VPPirRXgvMambqUPKw6i8yuw1rk+Q=="],
+    "@ink/lightos": ["ink-framework-lightos@0.1.0-alpha.8", "", { "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.8", "react": "19.2.8" } }, "sha512-NxnlnIe2yiZpIXdM7SYw0/Qo5dzP+I1TjkvdVvDNYtTfgxSExkU5epRTGQDwUnlQHgfbWAsHyPvEndH+9SUYiw=="],
 
-    "@ink/network": ["ink-framework-network@0.1.0-alpha.5", "", { "dependencies": { "@types/whatwg-url": "13.0.0", "web-streams-polyfill": "4.3.0", "whatwg-url": "14.2.0" }, "peerDependencies": { "@ink/files": "npm:ink-framework-files@0.1.0-alpha.5", "ink": "npm:ink-framework@0.1.0-alpha.5" } }, "sha512-Bqfuabcut6L8jWzRoibLJorw7BQ69JPBRo0TPa60C39KtKLeGSkEiYQm1sSwzVRrGN9qEfFdg+Bby1DODhQRJA=="],
+    "@ink/network": ["ink-framework-network@0.1.0-alpha.8", "", { "dependencies": { "@types/whatwg-url": "13.0.0", "web-streams-polyfill": "4.3.0", "whatwg-url": "14.2.0" }, "peerDependencies": { "@ink/files": "npm:ink-framework-files@0.1.0-alpha.8", "ink": "npm:ink-framework@0.1.0-alpha.8" } }, "sha512-2JbC61cVJ/lDWF4j8W3oA1HmDVLsD3jTd3jUtzzBYtfKjBKgy0twplVfIV8PoEfI/wQ6UsKobhssT8z6pjVMQA=="],
 
-    "@ink/store": ["ink-framework-store@0.1.0-alpha.5", "", { "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.5" } }, "sha512-jG5n+1Wt2nuRc/+K8OTDuNnilRscnXFqOObBT+5C4cMrcO/6hHPJlsZul6XnrG8nazGpgaVJnqpYe7zzSrZXzQ=="],
+    "@ink/store": ["ink-framework-store@0.1.0-alpha.8", "", { "peerDependencies": { "ink": "npm:ink-framework@0.1.0-alpha.8" } }, "sha512-OV8eEUKOcOwueeu6V8uHy0xg1u4viWwefVQJHbtPmXZm6InbvUkSuGIUkrOcha+RTt7QQjNwrPF0+HsVHrbNMA=="],
 
     "@types/react": ["@types/react@19.2.18", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w=="],
 
@@ -42,7 +42,7 @@
 
     "entities": ["entities@7.0.1", "", {}, "sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA=="],
 
-    "ink": ["ink-framework@0.1.0-alpha.5", "", { "dependencies": { "linkify-it": "^6.1.0", "react-reconciler": "0.33.0" }, "peerDependencies": { "react": "19.2.8" } }, "sha512-bvxOiFZJqTlk+p/1nd/m65AD+wT2oSLlX5zFK3eRUZa9kp13UzYOgOB6A5eViIEjY/Y1xFEZK9AqV09qBXQrwA=="],
+    "ink": ["ink-framework@0.1.0-alpha.8", "", { "dependencies": { "linkify-it": "^6.1.0", "react-reconciler": "0.33.0" }, "peerDependencies": { "react": "19.2.8" } }, "sha512-dh1UZJ83WCbCMURE/rHTaC/DW+k17NxcijbO82LTE9hqtodszInd2VbzBNerUxBkjDWHzkOulk+s6/W6zI0/4w=="],
 
     "linkify-it": ["linkify-it@6.1.0", "", { "dependencies": { "uc.micro": "^3.0.0" } }, "sha512-wJ/TwpSDTLepCrQoYWYIExIKg5Zchex2Nn5yk2mFnB+6PtdkHtyLx742md9csRjjOnGkKIS/RrbY7l8D6gT9Vw=="],
 
